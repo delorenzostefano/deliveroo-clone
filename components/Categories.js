@@ -1,8 +1,23 @@
 import { View, Text, ScrollView } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import CategoryCard from "./CategoryCard";
+import client, { urlFor } from "../sanity";
 
 const Categories = () => {
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    client
+      .fetch(
+        `
+      *[_type == "category"]
+    `
+      )
+      .then((data) => {
+        setCategories(data);
+      });
+  }, []);
+
   return (
     <ScrollView
       contentContainerStyle={{
@@ -12,35 +27,14 @@ const Categories = () => {
       horizontal
       showsHorizontalScrollIndicator={false}
     >
+      {categories.map((category) => (
+        <CategoryCard
+          key={category._id}
+          imgUrl="https://images.panda.org/assets/images/pages/welcome/orangutan_1600x1000_279157.jpg"
+          title={category.name}
+        />
+      ))}
       {/* CategoryCard */}
-      <CategoryCard
-        imgUrl="https://images.panda.org/assets/images/pages/welcome/orangutan_1600x1000_279157.jpg"
-        title="Testing 1"
-      />
-      <CategoryCard
-        imgUrl="https://images.panda.org/assets/images/pages/welcome/orangutan_1600x1000_279157.jpg"
-        title="Testing 2"
-      />
-      <CategoryCard
-        imgUrl="https://images.panda.org/assets/images/pages/welcome/orangutan_1600x1000_279157.jpg"
-        title="Testing 3"
-      />
-      <CategoryCard
-        imgUrl="https://images.panda.org/assets/images/pages/welcome/orangutan_1600x1000_279157.jpg"
-        title="Testing 1"
-      />
-      <CategoryCard
-        imgUrl="https://images.panda.org/assets/images/pages/welcome/orangutan_1600x1000_279157.jpg"
-        title="Testing 1"
-      />
-      <CategoryCard
-        imgUrl="https://images.panda.org/assets/images/pages/welcome/orangutan_1600x1000_279157.jpg"
-        title="Testing 1"
-      />
-      <CategoryCard
-        imgUrl="https://images.panda.org/assets/images/pages/welcome/orangutan_1600x1000_279157.jpg"
-        title="Testing 1"
-      />
     </ScrollView>
   );
 };
